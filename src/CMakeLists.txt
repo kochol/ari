@@ -1,0 +1,2 @@
+fips_add_subdirectory(engine)
+fips_add_subdirectory(editor)
