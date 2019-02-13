@@ -8,6 +8,6 @@ get_filename_component(FIPS_ROOT_DIR "../fips" ABSOLUTE)
 include("${FIPS_ROOT_DIR}/cmake/fips.cmake")
 
 fips_setup(PROJECT ari)
-include_directories(src)
+include_directories(src/engine)
 fips_add_subdirectory(src)
 fips_finish()
