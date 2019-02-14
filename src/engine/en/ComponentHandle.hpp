@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ComponentId.hpp"
+
 namespace ari
 {
 	namespace en
@@ -8,9 +10,11 @@ namespace ari
 		class ComponentHandle
 		{
 		public:
-			int	Index;
+			int					Handle;
 			
-			T*	Component;
+			T*					Component;
+
+			ComponentId::Enum	Id;
 
 			T* operator->() const
 			{
