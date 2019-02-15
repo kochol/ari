@@ -6,13 +6,25 @@
 #include "core/ObjectPool.hpp"
 #include "Core/Containers/Array.h"
 #include "Core/Containers/Map.h"
+#include "UpdateState.hpp"
+#include "sx/jobs.h"
 
 namespace ari
 {
 	namespace en
 	{
+		struct System;
+
 		struct World
 		{
+			enum class UpdateType
+			{
+				Sync,
+				Async
+			};
+
+			UpdateType UpdateType = UpdateType::Async;
+
 			//! Constructor
 			World();
 
@@ -33,17 +45,28 @@ namespace ari
 			//! Removes a component from an entity
 			void RemoveComponent(Entity _entity, ComponentId::Enum _id);
 
+			//! Add a system to the world
+			void AddSystem(System* _system);
+
+			//! Removes a system from world
+			void RemoveSystem(System* _system);
+
+			void Update(float _elaspedTime);
+
+			sx_job_context	*	JobContext = nullptr;
+
 		private:
 
 			template<class T>
 			core::ObjectPool<T, 1000>* GetComponentPool(ComponentId::Enum _id);
 
-			Entity		m_eNextEntityId = 0;	
-			Oryol::StaticArray<void*, ComponentId::Count>
-						m_aComponentPools;
+			Entity					m_eNextEntityId = 0;	
+			Oryol::Array<void*>		m_aComponentPools;
 			
 			Oryol::Map<ComponentId::Enum, Oryol::Map<Entity, int>>
-						m_mEntityComponents;
+									m_mEntityComponents;
+
+			Oryol::Array<System*>	m_aSystems;			
 		};
 
 		template <class T>
@@ -75,8 +98,12 @@ namespace ari
 		template<class T>
 		core::ObjectPool<T, 1000>* World::GetComponentPool(ComponentId::Enum _id)
 		{
+			while (m_aComponentPools.Size() <= _id)
+				m_aComponentPools.Add(nullptr);
+
 			if (m_aComponentPools[_id] == nullptr)
 				m_aComponentPools[_id] = Oryol::Memory::New<core::ObjectPool<T, 1000>>();
+
 			return static_cast<core::ObjectPool<T, 1000>*>(m_aComponentPools[_id]);
 		}
 		
