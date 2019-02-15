@@ -41,14 +41,8 @@ namespace ari
 			Entity		m_eNextEntityId = 0;	
 			Oryol::StaticArray<void*, ComponentId::Count>
 						m_aComponentPools;
-
-			struct EntityComponent
-			{
-				Entity 	entity;
-				int		Handle;
-			};
 			
-			Oryol::Map<ComponentId::Enum, Oryol::Array<EntityComponent>>
+			Oryol::Map<ComponentId::Enum, Oryol::Map<Entity, int>>
 						m_mEntityComponents;
 		};
 
@@ -73,9 +67,9 @@ namespace ari
 		void World::AddComponent(Entity _entity, ComponentHandle<T> _cmp)
 		{
 			if (!m_mEntityComponents.Contains(_cmp.Id))
-				m_mEntityComponents.Add(_cmp.Id, Oryol::Array());
+				m_mEntityComponents.Add(_cmp.Id, Oryol::Map<Entity, int>());
 			
-			m_mEntityComponents[_cmp.Id].Add({ _entity, _cmp.Handle });
+			m_mEntityComponents[_cmp.Id].Add(_entity, _cmp.Handle);
 		}
 
 		template<class T>
