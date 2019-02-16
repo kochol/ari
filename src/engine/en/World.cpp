@@ -23,8 +23,7 @@ struct UpdateJobData
 static void system_update_job_cb(int _index, void* _userData)
 {
 	UpdateJobData* data = reinterpret_cast<UpdateJobData*>(_userData);
-	data->System->UpdateCallback(data->World, data->ElaspedTime, data->UpdateState,
-								 data->System->UserData);
+	data->System->Update(data->World, data->ElaspedTime, data->UpdateState);
 }
 
 namespace ari
@@ -56,6 +55,7 @@ namespace ari
 		void World::AddSystem(System* _system)
 		{
 			m_aSystems.Add(_system);
+			_system->Configure(this);
 		}
 
 		//! Removes a system from world
@@ -66,6 +66,7 @@ namespace ari
 				if (m_aSystems[i] == _system)
 				{
 					m_aSystems.EraseSwap(i);
+					_system->UnConfigure(this);
 					return;
 				}
 			}
@@ -76,9 +77,8 @@ namespace ari
 			// 1st, Run the main thread update state.
 			for (int i = 0; i < m_aSystems.Size(); i++)
 			{
-				if (m_aSystems[i]->NeedUpdateCallback(UpdateState::MainThreadState, m_aSystems[i]->UserData))
-					m_aSystems[i]->UpdateCallback(this, _elaspedTime, UpdateState::MainThreadState,
-						m_aSystems[i]->UserData);
+				if (m_aSystems[i]->NeedUpdateOn(UpdateState::MainThreadState))
+					m_aSystems[i]->Update(this, _elaspedTime, UpdateState::MainThreadState);
 			}
 
 			if (UpdateType == UpdateType::Sync)
@@ -86,25 +86,22 @@ namespace ari
 				// 2nd, Run gameplay update state
 				for (int i = 0; i < m_aSystems.Size(); i++)
 				{
-					if (m_aSystems[i]->NeedUpdateCallback(UpdateState::GamePlayState, m_aSystems[i]->UserData))
-						m_aSystems[i]->UpdateCallback(this, _elaspedTime, UpdateState::GamePlayState,
-							m_aSystems[i]->UserData);
+					if (m_aSystems[i]->NeedUpdateOn(UpdateState::GamePlayState))
+						m_aSystems[i]->Update(this, _elaspedTime, UpdateState::GamePlayState);
 				}
 
 				// 3rd, Run scene update state
 				for (int i = 0; i < m_aSystems.Size(); i++)
 				{
-					if (m_aSystems[i]->NeedUpdateCallback(UpdateState::SceneState, m_aSystems[i]->UserData))
-						m_aSystems[i]->UpdateCallback(this, _elaspedTime, UpdateState::SceneState,
-							m_aSystems[i]->UserData);
+					if (m_aSystems[i]->NeedUpdateOn(UpdateState::SceneState))
+						m_aSystems[i]->Update(this, _elaspedTime, UpdateState::SceneState);
 				}
 
 				// 4th, Run frame update state
 				for (int i = 0; i < m_aSystems.Size(); i++)
 				{
-					if (m_aSystems[i]->NeedUpdateCallback(UpdateState::FrameState, m_aSystems[i]->UserData))
-						m_aSystems[i]->UpdateCallback(this, _elaspedTime, UpdateState::FrameState,
-							m_aSystems[i]->UserData);
+					if (m_aSystems[i]->NeedUpdateOn(UpdateState::FrameState))
+						m_aSystems[i]->Update(this, _elaspedTime, UpdateState::FrameState);
 				}				
 			}
 			else
@@ -125,7 +122,7 @@ namespace ari
 				// 2nd Run frame update state
 				for (int i = 0; i < m_aSystems.Size(); i++)
 				{
-					if (m_aSystems[i]->NeedUpdateCallback(UpdateState::FrameState, m_aSystems[i]->UserData))
+					if (m_aSystems[i]->NeedUpdateOn(UpdateState::FrameState))
 					{
 						jobDatas.Add({m_aSystems[i], this, UpdateState::FrameState, _elaspedTime});
 						frameJobs.Add({system_update_job_cb, &jobDatas[c], SX_JOB_PRIORITY_HIGH});
@@ -140,7 +137,7 @@ namespace ari
 				// 3rd, Run gameplay update state
 				for (int i = 0; i < m_aSystems.Size(); i++)
 				{
-					if (m_aSystems[i]->NeedUpdateCallback(UpdateState::GamePlayState, m_aSystems[i]->UserData))
+					if (m_aSystems[i]->NeedUpdateOn(UpdateState::GamePlayState))
 					{
 						jobDatas.Add({m_aSystems[i], this, UpdateState::GamePlayState, _elaspedTime});
 						gameplayJobs.Add({system_update_job_cb, &jobDatas[c], SX_JOB_PRIORITY_HIGH});
@@ -156,7 +153,7 @@ namespace ari
 				// 4th, Run scene update state
 				for (int i = 0; i < m_aSystems.Size(); i++)
 				{
-					if (m_aSystems[i]->NeedUpdateCallback(UpdateState::SceneState, m_aSystems[i]->UserData))
+					if (m_aSystems[i]->NeedUpdateOn(UpdateState::SceneState))
 					{
 						jobDatas.Add({m_aSystems[i], this, UpdateState::SceneState, _elaspedTime});
 						sceneJobs.Add({system_update_job_cb, &jobDatas[c], SX_JOB_PRIORITY_HIGH});

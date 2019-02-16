@@ -13,7 +13,7 @@ namespace ari
 {
 	namespace en
 	{
-		struct System;
+		class System;
 
 		struct World
 		{
