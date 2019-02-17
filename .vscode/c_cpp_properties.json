@@ -5,7 +5,8 @@
             "includePath": [
 				"${workspaceFolder}/**",
 				"${workspaceFolder}/../oryol/code/Modules",
-				"${workspaceFolder}/../fips-sx/sx/include"
+                "${workspaceFolder}/../fips-sx/sx/include",
+                "${workspaceFolder}/../oryol-imgui/src"
             ],
             "defines": [
                 "_DEBUG",

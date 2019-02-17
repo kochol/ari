@@ -45,6 +45,35 @@ namespace ari
 			return m_eNextEntityId++;
 		}	
 
+		void World::SetComponentTag(ComponentId::Enum _id, ComponentTag::Enum _tag)
+		{
+			m_mComponentTags.Add(_id, _tag);
+
+			if (!m_mTags.Contains(_tag))
+				m_mTags.Add(_tag, Oryol::Array<ComponentId::Enum>());
+
+			auto& v = m_mTags[_tag];
+			for(auto& id: v)
+				if (id == _id)
+					return;
+
+			m_mTags[_tag].Add(_id);
+		}
+
+		ComponentTag::Enum World::GetComponentTag(ComponentId::Enum _id)
+		{
+			int i = m_mComponentTags.FindIndex(_id);
+			if (i == Oryol::InvalidIndex)
+				return ComponentTag::General;
+
+			return m_mComponentTags.ValueAtIndex(i);
+		}
+
+		const Oryol::Array<ComponentId::Enum>& World::GetComponentIdsByTag(ComponentTag::Enum _tag)
+		{
+			return m_mTags[_tag];
+		}
+
 		// Removes a component from an entity
 		void World::RemoveComponent(Entity _entity, ComponentId::Enum _id)
 		{
@@ -72,13 +101,13 @@ namespace ari
 			}
 		}
 
-		void World::Update(float _elaspedTime)
+		void World::Update(float _elapsedTime)
 		{
 			// 1st, Run the main thread update state.
 			for (int i = 0; i < m_aSystems.Size(); i++)
 			{
 				if (m_aSystems[i]->NeedUpdateOn(UpdateState::MainThreadState))
-					m_aSystems[i]->Update(this, _elaspedTime, UpdateState::MainThreadState);
+					m_aSystems[i]->Update(this, _elapsedTime, UpdateState::MainThreadState);
 			}
 
 			if (UpdateType == UpdateType::Sync)
@@ -87,21 +116,21 @@ namespace ari
 				for (int i = 0; i < m_aSystems.Size(); i++)
 				{
 					if (m_aSystems[i]->NeedUpdateOn(UpdateState::GamePlayState))
-						m_aSystems[i]->Update(this, _elaspedTime, UpdateState::GamePlayState);
+						m_aSystems[i]->Update(this, _elapsedTime, UpdateState::GamePlayState);
 				}
 
 				// 3rd, Run scene update state
 				for (int i = 0; i < m_aSystems.Size(); i++)
 				{
 					if (m_aSystems[i]->NeedUpdateOn(UpdateState::SceneState))
-						m_aSystems[i]->Update(this, _elaspedTime, UpdateState::SceneState);
+						m_aSystems[i]->Update(this, _elapsedTime, UpdateState::SceneState);
 				}
 
 				// 4th, Run frame update state
 				for (int i = 0; i < m_aSystems.Size(); i++)
 				{
 					if (m_aSystems[i]->NeedUpdateOn(UpdateState::FrameState))
-						m_aSystems[i]->Update(this, _elaspedTime, UpdateState::FrameState);
+						m_aSystems[i]->Update(this, _elapsedTime, UpdateState::FrameState);
 				}				
 			}
 			else
@@ -124,7 +153,7 @@ namespace ari
 				{
 					if (m_aSystems[i]->NeedUpdateOn(UpdateState::FrameState))
 					{
-						jobDatas.Add({m_aSystems[i], this, UpdateState::FrameState, _elaspedTime});
+						jobDatas.Add({m_aSystems[i], this, UpdateState::FrameState, _elapsedTime });
 						frameJobs.Add({system_update_job_cb, &jobDatas[c], SX_JOB_PRIORITY_HIGH});
 						c++;
 					}
@@ -139,7 +168,7 @@ namespace ari
 				{
 					if (m_aSystems[i]->NeedUpdateOn(UpdateState::GamePlayState))
 					{
-						jobDatas.Add({m_aSystems[i], this, UpdateState::GamePlayState, _elaspedTime});
+						jobDatas.Add({m_aSystems[i], this, UpdateState::GamePlayState, _elapsedTime });
 						gameplayJobs.Add({system_update_job_cb, &jobDatas[c], SX_JOB_PRIORITY_HIGH});
 						c++;
 					}
@@ -155,7 +184,7 @@ namespace ari
 				{
 					if (m_aSystems[i]->NeedUpdateOn(UpdateState::SceneState))
 					{
-						jobDatas.Add({m_aSystems[i], this, UpdateState::SceneState, _elaspedTime});
+						jobDatas.Add({m_aSystems[i], this, UpdateState::SceneState, _elapsedTime });
 						sceneJobs.Add({system_update_job_cb, &jobDatas[c], SX_JOB_PRIORITY_HIGH});
 						c++;
 					}

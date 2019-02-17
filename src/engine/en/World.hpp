@@ -31,6 +31,12 @@ namespace ari
 			//! Creates a new entity
 			Entity CreateEntity();
 
+			static void SetComponentTag(ComponentId::Enum _id, ComponentTag::Enum _tag);
+
+			static ComponentTag::Enum GetComponentTag(ComponentId::Enum _id);
+
+			static const Oryol::Array<ComponentId::Enum>& GetComponentIdsByTag(ComponentTag::Enum _tag);
+
 			//! Creates a component from pool
 			template<class T>
 			ComponentHandle<T> CreateComponent(ComponentId::Enum _id);
@@ -51,7 +57,7 @@ namespace ari
 			//! Removes a system from world
 			void RemoveSystem(System* _system);
 
-			void Update(float _elaspedTime);
+			void Update(float _elapsedTime);
 
 			template<class T, typename Func>
 			void GetComponents(ComponentId::Enum _id, Func _func);
@@ -70,6 +76,12 @@ namespace ari
 									m_mEntityComponents;
 
 			Oryol::Array<System*>	m_aSystems;			
+
+			static Oryol::Map<ComponentId::Enum, ComponentTag::Enum> 
+									m_mComponentTags;
+			static Oryol::Map<ComponentTag::Enum, Oryol::Array<ComponentId::Enum>>
+									m_mTags;
+
 		};
 
 		template <class T>

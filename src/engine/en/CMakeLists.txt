@@ -4,9 +4,10 @@ fips_begin_module(ari_en)
     fips_files(
 		ComponentId.hpp
 		Entity.hpp
+		Node.hpp			Node.cpp
 		System.hpp
 		UpdateState.hpp
-        WorldManager.cpp WorldManager.hpp
-        World.cpp World.hpp
+        WorldManager.hpp 	WorldManager.cpp
+        World.hpp 			World.cpp
     )
 fips_end_module()
