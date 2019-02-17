@@ -53,6 +53,9 @@ namespace ari
 
 			void Update(float _elaspedTime);
 
+			template<class T, typename Func>
+			void GetComponents(ComponentId::Enum _id, Func _func);
+
 			sx_job_context	*	JobContext = nullptr;
 
 		private:
@@ -107,6 +110,18 @@ namespace ari
 			return static_cast<core::ObjectPool<T, 1000>*>(m_aComponentPools[_id]);
 		}
 		
+		template<class T, typename Func>
+		void World::GetComponents(ComponentId::Enum _id, Func _func)
+		{
+			auto pool = GetComponentPool<T>(_id);
+			auto& m = m_mEntityComponents[_id];
+			for (auto it = m.begin(); it != m.end(); it++)
+			{
+				ComponentHandle<T> cmp = { it->value, &pool->Pool[it->value], _id };
+				_func(it->key, cmp);
+			}
+		}
+
 	} // en
 	
 } // ari
