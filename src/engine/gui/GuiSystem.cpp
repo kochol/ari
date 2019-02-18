@@ -11,6 +11,12 @@ namespace ari
 	{
 		GuiSystem::GuiSystem()
 		{
+			en::World::SetComponentTag(en::ComponentId::Button, en::ComponentTag::GUI);
+			en::World::SetComponentTag(en::ComponentId::CheckBox, en::ComponentTag::GUI);
+			en::World::SetComponentTag(en::ComponentId::Image, en::ComponentTag::GUI);
+			en::World::SetComponentTag(en::ComponentId::Label, en::ComponentTag::GUI);
+			en::World::SetComponentTag(en::ComponentId::Popup, en::ComponentTag::GUI);
+			en::World::SetComponentTag(en::ComponentId::TextBox, en::ComponentTag::GUI);
 			en::World::SetComponentTag(en::ComponentId::Window, en::ComponentTag::GUI);
 		}
 
@@ -35,6 +41,8 @@ namespace ari
 		void GuiSystem::Update(World* _world, float _elapsed,
 			UpdateState::Enum _state)
 		{
+			IMUI::NewFrame(); // TODO: Pass elapsed param
+
 			auto& ids = World::GetComponentIdsByTag(ComponentTag::GUI);
 			for (const auto& id: ids)
 			{
@@ -43,6 +51,8 @@ namespace ari
 					this->RenderGui(gui.Component);
 				});
 			}
+
+			ImGui::Render();
 		}
 
 		bool GuiSystem::NeedUpdateOn(UpdateState::Enum _state)

@@ -17,6 +17,12 @@ namespace ari
 				Transform2D,
 
 				// GUI
+				Button,
+				CheckBox,
+				Image,
+				Label,
+				Popup,
+				TextBox,
 				Window,
 
 				Count,

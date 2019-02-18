@@ -1,6 +1,7 @@
 Ariyana game framework.
 
 -- Works Logs
+2/18/2019 Add Some gui components
 2/17/2019 Add GuiSystem, Window, Node, Gui, Delegate
 2/16/2019 Update System interface
 2/15/2019 Add System
