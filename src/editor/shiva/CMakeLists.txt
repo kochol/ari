@@ -2,6 +2,7 @@ fips_begin_module(shiva)
 	fips_vs_warning_level(3)
 	fips_deps(ari_gui)
     fips_files(
+		DirectoryTree.hpp		DirectoryTree.cpp
 		Editor.hpp				Editor.cpp
 		EditorSettings.hpp		EditorSettings.cpp
 		Project.hpp				Project.cpp
