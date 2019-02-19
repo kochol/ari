@@ -19,3 +19,5 @@ exports:
         ari_core :          src/engine/core
         ari_en :            src/engine/en
         ari_gui :           src/engine/gui
+        # editor modules
+        shiva :             src/editor/shiva
