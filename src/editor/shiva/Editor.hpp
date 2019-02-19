@@ -2,6 +2,7 @@
 #include "en/World.hpp"
 #include "gui/GuiSystem.hpp"
 #include "windows/EditorWindowManager.hpp"
+#include "Core/Time/TimePoint.h"
 
 namespace ari
 {
@@ -31,11 +32,13 @@ namespace ari
 
 			en::World			m_EditorWorld;
 			gui::GuiSystem		m_GuiSystem;
-			ari::RenderSystem	m_RenderSystem;
-			ari::SceneSystem	m_SceneSystem;
+			//ari::RenderSystem	m_RenderSystem;
+			//ari::SceneSystem	m_SceneSystem;
 			ProjectBrowser		m_ProjectBrowser;
 			EditorWindowManager	m_EditorWindow;
 			Project			*	m_pCurrentProject = nullptr;
+			Oryol::TimePoint	m_LastTimePoint;
+
 
 		}; // Editor
 

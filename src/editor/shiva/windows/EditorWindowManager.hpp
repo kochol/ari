@@ -4,9 +4,14 @@
 
 namespace ari
 {
-	class World;
-	class DockSpace;
-	class Window;
+	namespace en
+	{
+		class World;
+	}
+	namespace gui
+	{
+		class Window;
+	}
 
 	namespace sh
 	{
@@ -23,7 +28,7 @@ namespace ari
 
 			~EditorWindowManager();
 
-			void Init(ari::World* _world);
+			void Init(en::World* _world);
 
 			void Shutdown();
 
