@@ -4,5 +4,9 @@ fips_begin_module(shiva)
     fips_files(
 			Editor.hpp					Editor.cpp
 			EditorSettings.hpp	EditorSettings.cpp
-    )
+	)
+	fips_dir(windows)
+	fips_files(
+		EditorWindowManager.hpp			EditorWindowManager.cpp
+	)
 fips_end_module()

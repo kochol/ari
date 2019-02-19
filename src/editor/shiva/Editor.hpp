@@ -1,6 +1,7 @@
 #pragma once
 #include "en/World.hpp"
 #include "gui/GuiSystem.hpp"
+#include "windows/EditorWindowManager.hpp"
 
 namespace ari
 {
