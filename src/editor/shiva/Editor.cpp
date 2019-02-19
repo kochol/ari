@@ -1,4 +1,5 @@
 #include "Editor.hpp"
+#include "EditorSettings.hpp"
 
 namespace ari
 {

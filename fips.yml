@@ -9,6 +9,8 @@ imports:
         git: https://github.com/floooh/oryol-imgui.git
     fips-sx:
         git: https://github.com/kochol/fips-sx.git
+    fips-MetaStuff:
+        git: https://github.com/kochol/fips-MetaStuff.git
 
 exports:
     header-dirs :
