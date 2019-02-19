@@ -9,3 +9,13 @@ imports:
         git: https://github.com/floooh/oryol-imgui.git
     fips-sx:
         git: https://github.com/kochol/fips-sx.git
+
+exports:
+    header-dirs :
+        - src/engine
+        - src/editor
+    modules :
+        # engine modules
+        ari_core :          src/engine/core
+        ari_en :            src/engine/en
+        ari_gui :           src/engine/gui
