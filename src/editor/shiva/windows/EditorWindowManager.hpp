@@ -6,7 +6,7 @@ namespace ari
 {
 	namespace en
 	{
-		class World;
+		struct World;
 	}
 	namespace gui
 	{

@@ -3,6 +3,7 @@
 #include "gui/GuiSystem.hpp"
 #include "windows/EditorWindowManager.hpp"
 #include "Core/Time/TimePoint.h"
+#include "windows/ProjectBrowser.hpp"
 
 namespace ari
 {
