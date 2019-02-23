@@ -7,6 +7,11 @@
 			"label": "build",
 			"type": "shell",
 			"command": "./fips build"
+		},
+		{
+			"label": "gen",
+			"type": "shell",
+			"command": "./fips gen"
 		}
 	]
 }

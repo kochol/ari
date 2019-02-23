@@ -1,5 +1,6 @@
 #include "DirectoryTree.hpp"
 #include "dirent.h"
+#include "Core/String/StringBuilder.h"
 
 namespace ari
 {
@@ -7,20 +8,19 @@ namespace ari
 	{
 		void DirectoryTree::Update()
 		{
-			if (Name.length() == 0)
+			if (Name.Length() == 0)
 			{
-				bx::StringView p = Path.get();
-				const char* slash = bx::strRFind(p, '/').getPtr();
-				slash++;
-				Name = slash;
+				Oryol::StringBuilder p(Path.Folder);
+				const int i = p.FindLastOf(0, p.Length(), "/");
+				Name = p.GetSubString(i + 1, p.Length());
 			}
 
-			// clear the childs.
-			Directories.clear();
-			FileList.clear();
+			// clear the children.
+			Directories.Clear();
+			FileList.Clear();
 
 			// get file list.
-			DIR* dir = opendir(Path.get());
+			DIR* dir = opendir(Path.Path.AsCStr());
 			dirent* next;
 			do
 			{
@@ -34,17 +34,17 @@ namespace ari
 					{
 						DirectoryTree child;
 						child.Path = Path;
-						child.Path.join(next->d_name);
-						Directories.push_back(child);
-						Directories[Directories.size() - 1].Update();
+						child.Path.Join(next->d_name);
+						Directories.Add(child);
+						Directories[Directories.Size() - 1].Update();
 					}
 					else if (next->d_type == DT_REG)
 					{
-						FileList.push_back({ next->d_name });
+						FileList.Add({ next->d_name });
 					}
 					else
 					{
-						printf("Unknown file type.\n");
+						Oryol::Log::Error("Unknown file type.");
 					}
 				}
 			} while (next);

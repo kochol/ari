@@ -1,7 +1,7 @@
 #pragma once
-#include <string>
-#include "bx/file.h"
-#include <vector>
+#include <Core/String/String.h>
+#include <Core/Containers/Array.h>
+#include "core/FilePath.hpp"
 
 namespace ari
 {
@@ -9,18 +9,16 @@ namespace ari
 	{
 		struct FileInfo
 		{
-			std::string Name;
+			Oryol::String Name;
 		};
 
-		class DirectoryTree
+		struct DirectoryTree
 		{
-		public:
-
-			std::string Name;
-			bx::FilePath Path;
-			std::vector<FileInfo> FileList;
-			std::vector<DirectoryTree> Directories;
-			bool IsRoot = false;
+			Oryol::String				Name;
+			ari::core::FilePath			Path;
+			Oryol::Array<FileInfo>		FileList;
+			Oryol::Array<DirectoryTree> Directories;
+			bool						IsRoot = false;
 
 			void Update();
 
