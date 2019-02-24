@@ -9,8 +9,10 @@ fips_begin_module(shiva)
 	)
 	fips_dir(windows)
 	fips_files(
+		AssetBrowser.hpp				AssetBrowser.cpp
+		AssetGui.hpp						AssetGui.cpp
 		DockWindow.hpp					DockWindow.cpp
 		EditorWindowManager.hpp	EditorWindowManager.cpp
-		ProjectBrowser.hpp		ProjectBrowser.cpp
+		ProjectBrowser.hpp			ProjectBrowser.cpp
 	)
 fips_end_module()

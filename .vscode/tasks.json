@@ -9,6 +9,11 @@
 			"command": "./fips build"
 		},
 		{
+			"label": "build-emsc",
+			"type": "shell",
+			"command": "./fips build emsc-ninja-debug"
+		},
+		{
 			"label": "gen",
 			"type": "shell",
 			"command": "./fips gen"
