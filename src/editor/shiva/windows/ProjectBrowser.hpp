@@ -1,14 +1,22 @@
 #pragma once
-#include "en/Entity.hpp"
+
 #include "gui/Gui.hpp"
-#include "gui/Button.hpp"
-#include "gui/Label.hpp"
+#include "DockWindow.hpp"
 
 namespace ari
 {
-	class World;
-	class TextBox;
-	class Popup;
+	namespace en
+	{
+		struct World;
+	}
+
+	namespace gui
+	{
+		class Button;
+		class Label;
+		class TextBox;
+		class Popup;
+	}
 
 	namespace sh
 	{
@@ -32,20 +40,20 @@ namespace ari
 
 			~ProjectBrowser();
 
-			void Init(ari::World* p_world) override;
+			void Init(en::World* p_world) override;
 
 			void Shutdown() override;
 
 		protected:
 
-			ari::TextBox		*	m_pNewProjectName;
-			ari::TextBox		*	m_pNewProjectPath;
-			ari::Button			*	m_pNewProjectBtn;
-			ari::TextBox		*	m_pOpenProjectPath;
-			ari::Button			*	m_pOpenProjectBtn;
-			ari::Popup			*	m_pMessageBox;
-			ari::Label			*	m_pMbLabel;
-			ari::Button			*	m_pMbOkBtn;
+			en::ComponentHandle<gui::TextBox>	m_NewProjectName;
+			en::ComponentHandle<gui::TextBox>	m_NewProjectPath;
+			en::ComponentHandle<gui::Button>	m_NewProjectBtn;
+			en::ComponentHandle<gui::TextBox>	m_OpenProjectPath;
+			en::ComponentHandle<gui::Button>	m_OpenProjectBtn;
+			en::ComponentHandle<gui::Popup>		m_MessageBox;
+			en::ComponentHandle<gui::Label>		m_MbLabel;
+			en::ComponentHandle<gui::Button>	m_MbOkBtn;
 
 			void OnNewProjectClick();
 			void OnOpenProjectClick();
