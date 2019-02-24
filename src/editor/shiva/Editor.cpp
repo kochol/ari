@@ -1,4 +1,4 @@
-#include "shiva.hpp"
+#include "Editor.hpp"
 
 namespace ari
 {
