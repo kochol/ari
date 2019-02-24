@@ -1,7 +1,8 @@
 Ariyana game framework.
 
 -- Works Logs
-2/23/2019 Add FilePath, Update directory tree
+2/24/2019 Add DockWindow
+2/23/2019 Add FilePath. Update directory tree
 2/19/2019 Add some editor classes.
 2/18/2019 Add Some gui components
 2/17/2019 Add GuiSystem, Window, Node, Gui, Delegate

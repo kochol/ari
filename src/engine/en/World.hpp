@@ -31,6 +31,9 @@ namespace ari
 			//! Creates a new entity
 			Entity CreateEntity();
 
+			//! Destroy an entity
+			void DestroyEntity(Entity& _entity);
+
 			static void SetComponentTag(ComponentId::Enum _id, ComponentTag::Enum _tag);
 
 			static ComponentTag::Enum GetComponentTag(ComponentId::Enum _id);
@@ -42,7 +45,7 @@ namespace ari
 			ComponentHandle<T> CreateComponent(ComponentId::Enum _id);
 
 			template<class T>
-			void DestroyComponent(ComponentHandle<T> _cmp);
+			void DestroyComponent(ComponentHandle<T>& _cmp);
 
 			//! Add a component to an entity
 			template<class T>
@@ -69,7 +72,8 @@ namespace ari
 			template<class T>
 			core::ObjectPool<T, 1000>* GetComponentPool(ComponentId::Enum _id);
 
-			Entity					m_eNextEntityId = 0;	
+			Entity					m_eNextEntityId = 0;
+			Oryol::Queue<Entity>	m_qFreeEntities;
 			Oryol::Array<void*>		m_aComponentPools;
 			
 			Oryol::Map<ComponentId::Enum, Oryol::Map<Entity, int>>
@@ -94,10 +98,12 @@ namespace ari
 		}
 
 		template<class T>
-		void World::DestroyComponent(ComponentHandle<T> _cmp)
+		void World::DestroyComponent(ComponentHandle<T>& _cmp)
 		{
 			auto pool = GetComponentPool<T>(_cmp.Id);
 			pool->Remove(_cmp.Handle);
+			_cmp.Handle = Oryol::InvalidIndex;
+			_cmp.Component = nullptr;
 		}
 
 		// Add a component to an entity

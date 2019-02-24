@@ -9,6 +9,7 @@ fips_begin_module(shiva)
 	)
 	fips_dir(windows)
 	fips_files(
+		DockWindow.hpp					DockWindow.cpp
 		EditorWindowManager.hpp	EditorWindowManager.cpp
 		ProjectBrowser.hpp		ProjectBrowser.cpp
 	)

@@ -42,8 +42,21 @@ namespace ari
 
 		Entity World::CreateEntity()
 		{
-			return m_eNextEntityId++;
+			if (m_qFreeEntities.Empty())
+				return m_eNextEntityId++;
+
+			return m_qFreeEntities.Dequeue();
 		}	
+
+		void World::DestroyEntity(Entity & _entity)
+		{
+			m_qFreeEntities.Enqueue(_entity);
+			for (auto q: m_mEntityComponents)
+			{
+				q.value.Erase(_entity);
+			}
+			_entity = NULL_ENTITY;
+		}
 
 		void World::SetComponentTag(ComponentId::Enum _id, ComponentTag::Enum _tag)
 		{
