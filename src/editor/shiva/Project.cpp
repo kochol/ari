@@ -1,5 +1,9 @@
 #include "Project.hpp"
 #include <JsonCast.h>
+#include "sx/os.h"
+#include "core/Error.hpp"
+#include "sx/io.h"
+#include "sx/lin-alloc.h"
 
 namespace ari
 {
@@ -13,41 +17,40 @@ namespace ari
 		{
 		}
 
-		Project * Project::New(bx::FilePath projectPath, std::string name, bx::Error* err)
+		Project * Project::New(core::FilePath projectPath, std::string name, core::Error* err)
 		{
-			projectPath.join(name.c_str());
+			projectPath.Join(name.c_str());
 
 			// check the folder is empty
-			bx::FileInfo fi;
-			if (bx::stat(projectPath, fi))
+			if (sx_os_path_exists(projectPath.Path.AsCStr()))
 			{
-				BX_ERROR_SET(err, SH_ERROR_NOT_EMPTY_DIRECTPRY, "The directory is already exist.");
+				err->SetError("The directory is already exist.");
 				return nullptr;
 			}
 
 			// 1st Create the folders
-			if (!bx::makeAll(projectPath, err))
+			if (!core::MakeAll(projectPath, err))
 			{
 				return nullptr;
 			}
-			bx::FilePath tmp = projectPath;
-			tmp.join("src");
-			bx::make(tmp, err);
+			core::FilePath tmp = projectPath;
+			tmp.Join("src");
+			core::Make(tmp, err);
 			tmp = projectPath;
-			tmp.join("scripts");
-			bx::make(tmp, err);
+			tmp.Join("scripts");
+			core::Make(tmp, err);
 			tmp = projectPath;
-			tmp.join("assets");
-			bx::make(tmp, err);
+			tmp.Join("assets");
+			core::Make(tmp, err);
 			tmp = projectPath;
-			tmp.join(".import");
-			bx::make(tmp, err);
+			tmp.Join(".import");
+			core::Make(tmp, err);
 
 			Project* p = new Project();
 			p->m_ProjectName = name;
 			p->m_Tree.Path = projectPath;
 			p->m_Tree.IsRoot = true;
-			projectPath.join(name.append(".shiva").c_str());
+			projectPath.Join(name.append(".shiva").c_str());
 			p->m_ProjectPath = projectPath;
 			p->Save();
 			p->UpdateProjectTree();
@@ -59,33 +62,38 @@ namespace ari
 		{
 			json root;
 			to_json(root, *this);
-			std::ofstream out(m_ProjectPath.get());
 
-			out << std::setw(4) << root << std::endl;
+			sx_file_writer writer;
+			if (sx_file_open_writer(&writer, m_ProjectPath.Path.AsCStr()))
+			{
+				auto s = root.dump();
+				sx_file_write(&writer, s.c_str(), (int)s.length());
+				sx_file_close_writer(&writer);
+			}
+			else
+				Oryol::Log::Error("Can't write to %s file.", m_ProjectPath.Path.AsCStr());
 		}
 
-		Project * Project::Load(bx::FilePath path, bx::Error* err)
+		Project * Project::Load(core::FilePath path, core::Error* err)
 		{
-			bx::FileReader file;
-			if (!file.open(path, err))
+			auto mem = sx_file_load_text(sx_alloc_malloc, path.Path.AsCStr());
+			if (mem == nullptr)
 			{
+				err->SetError("Can't load project file.");
 				return nullptr;
 			}
-			const int32_t size = static_cast<int32_t>(file.seek(0, bx::Whence::End));
-			file.seek(0, bx::Whence::Begin);
-			char* data = new char[size + 1];
-			file.read(data, size, err);
-			data[size] = 0;
-			json root = json::parse(data);
-			delete[] data;
-			Project* p = new Project();
+
+			Project* p = Oryol::Memory::New<Project>();
+			json root = json::parse((char*)mem->data);
 			from_json(root, *p);
+
+			sx_mem_destroy_block(mem);
+
 			p->m_ProjectPath = path;
-			char* str_path = (char*)path.getPath().getPtr();
-			str_path[path.getPath().getLength() - 1] = 0;
-			p->m_Tree.Path.set(str_path);
+			p->m_Tree.Path.SetPath(path.Folder);
 			p->m_Tree.IsRoot = true;
 			p->UpdateProjectTree();
+
 			return p;
 		}
 

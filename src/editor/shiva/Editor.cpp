@@ -46,7 +46,7 @@ namespace ari
 			delete m_pCurrentProject;
 			m_pCurrentProject = project;
 
-			EditorSettings::Get().LastProjectPath = project->GetPath().get();
+			EditorSettings::Get().LastProjectPath = project->GetPath().Path.AsCStr();
 			EditorSettings::Save();
 
 			m_EditorWindow.Init(&m_EditorWorld);

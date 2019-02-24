@@ -1,10 +1,17 @@
 #pragma once
+
 #include <string>
 #include <Meta.h>
 #include "DirectoryTree.hpp"
+#include "core/FilePath.hpp"
 
 namespace ari
 {
+	namespace core 
+	{
+		struct Error;
+	}
+
 	namespace sh
 	{
 		class Project
@@ -15,20 +22,21 @@ namespace ari
 
 			~Project();
 
-			static Project* New(char* projectPath, std::string name, bx::Error* err);
+			static Project* New(core::FilePath projectPath, std::string name, core::Error* err);
 
 			void Save();
-			static Project* Load(char* path, bx::Error* err);
+
+			static Project* Load(core::FilePath path, core::Error* err);
 
 			void UpdateProjectTree();
 
 			const DirectoryTree& GetTree() const { return m_Tree; }
 
-			const bx::FilePath& GetPath() const { return m_ProjectPath; }
+			const core::FilePath& GetPath() const { return m_ProjectPath; }
 
 		private:
 
-			bx::FilePath	m_ProjectPath;
+			core::FilePath	m_ProjectPath;
 			std::string		m_ProjectName;
 			DirectoryTree	m_Tree;
 

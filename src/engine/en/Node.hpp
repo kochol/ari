@@ -34,7 +34,7 @@ namespace ari
 		void Node::AddChild(ComponentHandle<T> _child)
 		{
 			if (!m_mChilds.Contains(_child.Id))
-				m_mChilds.Add(c, Oryol::Array<Node*>());
+				m_mChilds.Add(_child.Id, Oryol::Array<Node*>());
 
 			m_mChilds[_child.Id].Add(_child.Component);
 		}

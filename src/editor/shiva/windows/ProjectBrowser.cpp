@@ -7,6 +7,8 @@
 #include "gui/Popup.hpp"
 #include "../EditorSettings.hpp"
 #include "../Editor.hpp"
+#include "core/Error.hpp"
+#include "../Project.hpp"
 
 namespace ari
 {
@@ -80,31 +82,31 @@ namespace ari
 
 		void ProjectBrowser::OnNewProjectClick()
 		{
-			bx::Error err;
-			Project* p = Project::New(bx::FilePath(m_pNewProjectPath->Text), m_pNewProjectName->Text, &err);
+			core::Error err;
+			Project* p = Project::New(core::FilePath(m_NewProjectPath->Text), m_NewProjectName->Text, &err);
 			if (p)
 			{
 				ProjectOpened(p);
 			}
 			else
 			{
-				m_pMbLabel->Text = err.getMessage().getPtr();
-				m_pMessageBox->Show();
+				m_MbLabel->Text = err.Message.AsCStr();
+				m_MessageBox->Show();
 			}
 		}
 
 		void ProjectBrowser::OnOpenProjectClick()
 		{
-			bx::Error err;
-			Project* p = Project::Load(bx::FilePath(m_pOpenProjectPath->Text), &err);
+			core::Error err;
+			Project* p = Project::Load(core::FilePath(m_OpenProjectPath->Text), &err);
 			if (p)
 			{
 				ProjectOpened(p);
 			}
 			else
 			{
-				m_pMbLabel->Text = err.getMessage().getPtr();
-				m_pMessageBox->Show();
+				m_MbLabel->Text = err.Message.AsCStr();
+				m_MessageBox->Show();
 			}
 		}
 
