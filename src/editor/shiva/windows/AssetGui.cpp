@@ -16,8 +16,8 @@ namespace ari
 		bool AssetGui::BeginRender()
 		{
 			ImGui::BeginGroup();
-			ImGui::Image(Image->Handle, ImVec2(64, 64));
-			ImGui::TextWrapped(FileName.c_str());
+			ImGui::Image(Image, ImVec2(64, 64));
+			ImGui::TextWrapped("%s", FileName.AsCStr());
 			ImGui::EndGroup();
 			if (ImGui::IsItemHovered())
 			{

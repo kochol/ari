@@ -2,6 +2,8 @@
 #include "gui/Gui.hpp"
 #include "core/Delegate.hpp"
 #include <string>
+#include "gui/Image.hpp"
+#include "Core/String/String.h"
 
 namespace ari
 {
@@ -14,13 +16,13 @@ namespace ari
 			~AssetGui() override;
 			bool BeginRender() override;
 
-			std::shared_ptr<ari::Texture>	Image;
-			std::string						FileName,
-				Path;
+			ImTextureID						Image;
+			Oryol::String					FileName,
+											Path;
 			bool							IsDirectory;
 			ari::DelegateOneParam<void, AssetGui*>
-				OnDblClick,
-				OnRightClick;
+											OnDblClick,
+											OnRightClick;
 		};
 
 	} // sh

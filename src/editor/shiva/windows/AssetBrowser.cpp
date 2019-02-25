@@ -3,6 +3,9 @@
 #include "en/World.hpp"
 #include "AssetGui.hpp"
 #include "../Project.hpp"
+#include "../Editor.hpp"
+#include "gui/Window.hpp"
+#include "Core/String/StringBuilder.h"
 
 namespace ari
 {
@@ -13,96 +16,94 @@ namespace ari
 			Shutdown();
 		}
 
-		void AssetBrowser::Init(ari::World* p_world)
+		void AssetBrowser::Init(en::World* p_world)
 		{
 			DockWindow::Init(p_world);
 
-			m_pWindow->SetTitle("Asset browser");
-			m_pWindow->Dock(ari::DockableWindow::Oriention::Left, 0.25f);
+			m_Window->Name = "Asset browser";
 			UpdateAssets(g_pEditor->GetCurrentProject()->GetTree());
 		}
 
 		void AssetBrowser::UpdateAssets(const DirectoryTree & _tree)
 		{
-			size_t c = 0;
-			std::string strFile = ASSETS_DIR;
-			strFile += "/icons/filetypes/DEFAULT.png";
-			std::string strFolder = ASSETS_DIR;
-			strFolder += "/icons/filetypes/folder.png";
+			int c = 0;
+			static Oryol::String strFile("sh:icons/filetypes/DEFAULT.png");
+			static Oryol::String strFolder("sh:icons/filetypes/folder.png");
+			static Oryol::String strUp("sh:icons/filetypes/folder_up.png");
+
 			if (!_tree.IsRoot)
 			{
-				std::string strUp = ASSETS_DIR;
-				strUp += "/icons/filetypes/folder_up.png";
 				m_vAssets[0]->Image = ari::g_pEngine->texture_manager.Load(strUp, nullptr);
-				m_vAssets[0]->Path = _tree.Path.get();
-				m_vAssets[0]->Path = m_vAssets[0]->Path.substr(0, m_vAssets[0]->Path.rfind('/'));
+				Oryol::StringBuilder sb(_tree.Path.Path);				
+				m_vAssets[0]->Path = sb.GetSubString(0, sb.FindLastOf(0, sb.Length(), "/"));
 				m_vAssets[0]->FileName = "..";
 				m_vAssets[0]->IsDirectory = true;
 				c++;
 			}
-			for (size_t i = 0; i < _tree.Directories.size(); ++i)
+			for (int i = 0; i < _tree.Directories.Size(); ++i)
 			{
-				if (m_vAssets.size() <= c)
+				if (m_vAssets.Size() <= c)
 				{
-					AssetGui* p_gui = new AssetGui;
+					auto p_gui = m_pWorld->CreateComponent<AssetGui>(ComponentId::AssetGui);
 					p_gui->Image = ari::g_pEngine->texture_manager.Load(strFolder, nullptr);
 					p_gui->FileName = _tree.Directories[i].Name;
-					p_gui->Path = _tree.Directories[i].Path.get();
+					p_gui->Path = _tree.Directories[i].Path.Path;
 					p_gui->IsDirectory = true;
 					p_gui->OnDblClick.Bind(this, &AssetBrowser::OnDblClick);
 					p_gui->OnRightClick.Bind(this, &AssetBrowser::OnRightClick);
 					if (c % 2 == 1)
 						p_gui->SameLine = true;
-					m_pWindow->AddChild(p_gui);
-					m_vAssets.push_back(p_gui);
+					m_Window->AddChild(p_gui);
+					m_vAssets.Add(p_gui);
 				}
 				else
 				{
 					m_vAssets[c]->Image = ari::g_pEngine->texture_manager.Load(strFolder, nullptr);
 					m_vAssets[c]->FileName = _tree.Directories[i].Name;
 					m_vAssets[c]->Visible = true;
-					m_vAssets[c]->Path = _tree.Directories[i].Path.get();
+					m_vAssets[c]->Path = _tree.Directories[i].Path.Path;
 					m_vAssets[c]->IsDirectory = true;
 				}
 				c++;
 			}
-			for (size_t i = 0; i < _tree.FileList.size(); ++i)
+			for (int i = 0; i < _tree.FileList.Size(); ++i)
 			{
-				if (m_vAssets.size() <= c)
+				if (m_vAssets.Size() <= c)
 				{
-					AssetGui* p_gui = new AssetGui;
+					auto p_gui = m_pWorld->CreateComponent<AssetGui>(ComponentId::AssetGui);
 					p_gui->Image = ari::g_pEngine->texture_manager.Load(strFile, nullptr);
 					p_gui->FileName = _tree.FileList[i].Name;
-					p_gui->Path = _tree.Path.get();
+					p_gui->Path = _tree.Path.Path;
 					p_gui->IsDirectory = false;
 					p_gui->OnDblClick.Bind(this, &AssetBrowser::OnDblClick);
 					p_gui->OnRightClick.Bind(this, &AssetBrowser::OnRightClick);
 					if (c % 2 == 1)
 						p_gui->SameLine = true;
-					m_pWindow->AddChild(p_gui);
-					m_vAssets.push_back(p_gui);
+					m_Window->AddChild(p_gui);
+					m_vAssets.Add(p_gui);
 				}
 				else
 				{
 					m_vAssets[c]->Image = ari::g_pEngine->texture_manager.Load(strFile, nullptr);
 					m_vAssets[c]->FileName = _tree.FileList[i].Name;
 					m_vAssets[c]->Visible = true;
-					m_vAssets[c]->Path = _tree.Path.get();
+					m_vAssets[c]->Path = _tree.Path.Path;
 					m_vAssets[c]->IsDirectory = false;
 				}
 				c++;
 			}
-			for (size_t i = c; i < m_vAssets.size(); i++)
+			for (int i = c; i < m_vAssets.Size(); i++)
 			{
 				m_vAssets[i]->Visible = false;
 			}
 		}
 
-		DirectoryTree* AssetBrowser::FindPathTree(DirectoryTree* _tree, const std::string& _path)
+		DirectoryTree* AssetBrowser::FindPathTree(DirectoryTree* _tree, const Oryol::String& _path)
 		{
-			if (_tree->Path.get() == _path)
+			if (_tree->Path.Path == _path)
 				return _tree;
-			for (size_t i = 0; i < _tree->Directories.size(); i++)
+
+			for (int i = 0; i < _tree->Directories.Size(); i++)
 			{
 				const auto r = FindPathTree(&_tree->Directories[i], _path);
 				if (r)
@@ -120,7 +121,7 @@ namespace ari
 				if (r)
 					UpdateAssets(*r);
 				else
-					printf("Can't find the directory %s.", _sender->Path.c_str());
+					Oryol::Log::Error("Can't find the directory %s.", _sender->Path.AsCStr());
 			}
 		}
 

@@ -21,16 +21,16 @@ namespace ari {
 
 			~AssetBrowser();
 
-			void Init(en::World* p_world);
+			void Init(en::World* p_world) override;
 
 		private:
 
 			void UpdateAssets(const DirectoryTree& _tree);
-			static DirectoryTree* FindPathTree(DirectoryTree* _tree, const std::string& _path);
+			static DirectoryTree* FindPathTree(DirectoryTree* _tree, const Oryol::String& _path);
 			void OnDblClick(AssetGui* _sender);
 			void OnRightClick(AssetGui* _sender);
 
-			Oryol::Array<AssetGui*>	m_vAssets;
+			Oryol::Array<en::ComponentHandle<AssetGui>>	m_vAssets;
 
 		}; // AssetBrowser
 
