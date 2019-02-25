@@ -33,7 +33,7 @@ namespace ari
 
 			if (!_tree.IsRoot)
 			{
-				m_vAssets[0]->Image = ari::g_pEngine->texture_manager.Load(strUp, nullptr);
+// TODO:				m_vAssets[0]->Image = ari::g_pEngine->texture_manager.Load(strUp, nullptr);
 				Oryol::StringBuilder sb(_tree.Path.Path);				
 				m_vAssets[0]->Path = sb.GetSubString(0, sb.FindLastOf(0, sb.Length(), "/"));
 				m_vAssets[0]->FileName = "..";
@@ -45,7 +45,7 @@ namespace ari
 				if (m_vAssets.Size() <= c)
 				{
 					auto p_gui = m_pWorld->CreateComponent<AssetGui>(ComponentId::AssetGui);
-					p_gui->Image = ari::g_pEngine->texture_manager.Load(strFolder, nullptr);
+					// TODO:					p_gui->Image = ari::g_pEngine->texture_manager.Load(strFolder, nullptr);
 					p_gui->FileName = _tree.Directories[i].Name;
 					p_gui->Path = _tree.Directories[i].Path.Path;
 					p_gui->IsDirectory = true;
@@ -58,7 +58,7 @@ namespace ari
 				}
 				else
 				{
-					m_vAssets[c]->Image = ari::g_pEngine->texture_manager.Load(strFolder, nullptr);
+					// TODO: m_vAssets[c]->Image = ari::g_pEngine->texture_manager.Load(strFolder, nullptr);
 					m_vAssets[c]->FileName = _tree.Directories[i].Name;
 					m_vAssets[c]->Visible = true;
 					m_vAssets[c]->Path = _tree.Directories[i].Path.Path;
@@ -71,7 +71,7 @@ namespace ari
 				if (m_vAssets.Size() <= c)
 				{
 					auto p_gui = m_pWorld->CreateComponent<AssetGui>(ComponentId::AssetGui);
-					p_gui->Image = ari::g_pEngine->texture_manager.Load(strFile, nullptr);
+					// TODO:			p_gui->Image = ari::g_pEngine->texture_manager.Load(strFile, nullptr);
 					p_gui->FileName = _tree.FileList[i].Name;
 					p_gui->Path = _tree.Path.Path;
 					p_gui->IsDirectory = false;
@@ -84,7 +84,7 @@ namespace ari
 				}
 				else
 				{
-					m_vAssets[c]->Image = ari::g_pEngine->texture_manager.Load(strFile, nullptr);
+					// TODO:			m_vAssets[c]->Image = ari::g_pEngine->texture_manager.Load(strFile, nullptr);
 					m_vAssets[c]->FileName = _tree.FileList[i].Name;
 					m_vAssets[c]->Visible = true;
 					m_vAssets[c]->Path = _tree.Path.Path;

@@ -28,6 +28,8 @@ namespace ari
 
 			// Add Systems
 			m_EditorWorld.AddSystem(&m_GuiSystem);
+			World::SetComponentTag(ComponentId::AssetGui, ComponentTag::GUI);
+
 			//m_EditorWorld.AddSystem(&m_RenderSystem);
 			//m_EditorWorld.AddSystem(&m_SceneSystem);
 			//m_EditorWorld.SetUpdateType(ari::World::UpdateType::Sync);
