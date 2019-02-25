@@ -11,7 +11,7 @@ namespace ari
 
 		bool Label::BeginRender()
 		{
-			ImGui::Text(Text);
+			ImGui::Text("%s", Text);
 			return true;
 		}
 

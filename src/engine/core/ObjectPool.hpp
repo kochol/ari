@@ -8,13 +8,13 @@ namespace ari
 {
 	namespace core
 	{
-		template<class T, int Size>
+		template<class T, int PoolSize>
 		class ObjectPool
 		{
 			public:
 
 			// The array Pool
-			Oryol::StaticArray<T, Size> Pool;
+			Oryol::StaticArray<T, PoolSize> Pool;
 
 			int Size() const
 			{

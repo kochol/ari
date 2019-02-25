@@ -5,7 +5,7 @@ namespace ari
 {
 	namespace gui
 	{
-		CheckBox::CheckBox() : Checked(false), Label("")
+		CheckBox::CheckBox() : Checked(false), Label(nullptr)
 		{
 		}
 
