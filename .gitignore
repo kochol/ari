@@ -1,2 +1,6 @@
+# folders
+.idea
+
 # files
 .fips-imports.cmake
+.fips-settings.yml
