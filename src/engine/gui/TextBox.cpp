@@ -1,3 +1,4 @@
+#include <sx/string.h>
 #include "TextBox.hpp"
 #include "imgui.h"
 
@@ -25,12 +26,7 @@ namespace ari
 		void TextBox::SetText(const char * _text) const
 		{
 			// copy over old content and free old buffer
-#if ORYOL_WINDOWS
-			errno_t res = strcpy_s(Text, m_MaxLength, _text);
-			o_assert(0 == res);
-#else
-			std::strcpy(Text, _text);
-#endif
+            sx_strcpy(Text, m_MaxLength, _text);
 		}
 
 	} // gui
