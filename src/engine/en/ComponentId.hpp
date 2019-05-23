@@ -25,6 +25,9 @@ namespace ari
 				TextBox,
 				Window,
 
+				// Editor
+				AssetGui,
+
 				Count,
 				UserComponent = 1000
 			};

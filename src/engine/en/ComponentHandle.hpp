@@ -10,9 +10,9 @@ namespace ari
 		class ComponentHandle
 		{
 		public:
-			int					Handle;
+			int					Handle = Oryol::InvalidIndex;
 			
-			T*					Component;
+			T*					Component = nullptr;
 
 			ComponentId::Enum	Id;
 

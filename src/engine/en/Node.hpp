@@ -3,6 +3,7 @@
 #include "ComponentId.hpp"
 #include "Core/Containers/Map.h"
 #include "Core/Containers/Array.h"
+#include "ComponentHandle.hpp"
 
 namespace ari
 {
@@ -13,9 +14,11 @@ namespace ari
 		public:
 			virtual ~Node() = default;
 
-			void AddChild(Node* _child, ComponentId::Enum _id);
+			template<class T>
+			void AddChild(ComponentHandle<T> _child);	
 
-			void RemoveChild(Node* _child, ComponentId::Enum _id);
+			template<class T>
+			void RemoveChild(ComponentHandle<T> _child);
 
 			bool HasChildWithId(ComponentId::Enum _id) const;
 
@@ -27,6 +30,22 @@ namespace ari
 
 		};
 		
+		template<class T>
+		void Node::AddChild(ComponentHandle<T> _child)
+		{
+			if (!m_mChilds.Contains(_child.Id))
+				m_mChilds.Add(_child.Id, Oryol::Array<Node*>());
+
+			m_mChilds[_child.Id].Add(_child.Component);
+		}
+
+		template<class T>
+		void Node::RemoveChild(ComponentHandle<T> _child)
+		{
+			auto& v = m_mChilds[_child.Id];
+			v.EraseSwap(v.FindIndexLinear(_child.Component, 0, v.Size() - 1));
+		}
+
 	} // en
 	
 } // ari
